@@ -27,13 +27,13 @@ def count_me(input_str):
 def test():
     return "This is test"
 
-# @app.route('/query/get')
-# def post():
-#         """ Retrieves data from the database """
-#         sql_statement = "SELECT TOP (1000) * FROM [SalesLT].[Customer]"
+@app.route('/query/get')
+def post():
+        """ Retrieves data from the database """
+        sql_statement = "SELECT TOP (1000) * FROM [SalesLT].[Customer]"
 
-#         cursor = conn.cursor()    
-#         rows = cursor.execute(sql_statement).fetchall()
-#         cursor.close()
-#         return '<br><br>'.join(str(row) for row in rows)
+        cursor = conn.cursor()    
+        rows = cursor.execute(sql_statement).fetchall()
+        cursor.close()
+        return '<br><br>'.join(str(row) for row in rows)
         
