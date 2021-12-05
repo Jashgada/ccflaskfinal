@@ -16,7 +16,7 @@ app.config.from_object(__name__)
 # conn = pyodbc.connect(os.environ['SQLAZURECONNSTR_WWIF'])
 @app.route("/")
 def hello():
-    return "Hello, Worldddd!"
+    return "Hello, World cdci!"
 
 @app.route('/countme/<input_str>')
 def count_me(input_str):
