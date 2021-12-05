@@ -6,7 +6,7 @@ import pyodbc
 # import pandas as pd
 # from flask_restful import reqparse, Api
 
-conn = pyodbc.connect("Driver={ODBC Driver 13 for SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
+conn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
 
 app = Flask(__name__)
 app.config.from_object(__name__)
