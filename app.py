@@ -2,11 +2,11 @@
 # import os
 # import json
 from flask import Flask
-# import pyodbc
+import pyodbc
 # import pandas as pd
 # from flask_restful import reqparse, Api
 
-# conn = pyodbc.connect("Driver={SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
+conn = pyodbc.connect("Driver={SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
 
 app = Flask(__name__)
 app.config.from_object(__name__)
