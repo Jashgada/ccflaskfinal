@@ -68,6 +68,7 @@ def createDb():
         reader = csv.reader(f.readlines()[1:])  # exclude header line
         cursor.executemany("""INSERT INTO household VALUES (?,?,?,?,?,?,?,?,?)""",
                     (row for row in reader))
+    cursor.close()
     return "success!"
 @app.route('/display')
 def display():
