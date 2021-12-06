@@ -51,42 +51,34 @@ def test():
 
 
 
-# @app.route('/createDb')
-# def createDb():
-#     cursor = conn.cursor()  
-#     cursor.execute("""DROP TABLE IF EXISTS household""")
-#     cursor.execute("""CREATE TABLE household (HSHD_NUM nvarchar(MAX), L nvarchar(MAX), AGE_RANGE nvarchar(MAX), MARITAL nvarchar(MAX), INCOME_RANGE nvarchar(MAX), HOMEOWNER nvarchar(MAX), HSHD_COMPOSITION nvarchar(MAX), HH_SIZE nvarchar(MAX), CHILDREN nvarchar(MAX))""")
-
-#     with open('400_households.csv', 'r') as f:
-#         reader = csv.reader(f.readlines()[1:])  # exclude header line
-#         cursor.executemany("""INSERT INTO household VALUES (?,?,?,?,?,?,?,?,?)""",
-#                     (row for row in reader))
-#     cursor.commit()
-#     cursor.close()
-#     return "success!"
 
 @app.route('/display')
 def display():
-    formhyptertext = """
+    sql_statement = """SELECT TOP (1000) * FROM [household] WHERE HSHD_NUM='0010' """ #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+    cursor = conn.cursor()    
+    rows = cursor.execute(sql_statement).fetchall()
+    cursor.close()
+    formhyptertext = "<p>The household number 10 is </p>"
+    formhyptertext += '<br>'.join(str(row) for row in rows)
+    formhyptertext += """
+    <br>
      <form action="/displayData" method = "POST">
     <p>Sort By <input type = "text" name = "sortBy" /></p>
     <p>Yyou can sort by Hshd_num, Basket_num, Date, Product_num, Department, Commodity</p>
+    <p>Search By Household number <input type = "text" name = "search" /></p>
     <p><input type = "submit" value = "Submit" /></p>
 </form>
     """
     return formhyptertext
-    # sql_statement = "SELECT TOP (1000) * FROM [household]"
-
-    # cursor = conn.cursor()    
-    # rows = cursor.execute(sql_statement).fetchall()
-    # cursor.close()
-    # return '<br><br>'.join(str(row) for row in rows)
-
+    
 @app.route('/displayData/', methods = ["POST", "GET"])
 def displayData():
     if request.method == "POST":
         sorter =  request.form["sortBy"]
-        sql_statement = """SELECT TOP (1000) * FROM [household] WHERE HSHD_NUM='0010' ORDER BY """ + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+        if request.form["search"] == "":
+            sql_statement = """SELECT * FROM [household] ORDER BY """ + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+        else:
+            sql_statement = "SELECT * FROM [household] WHERE HSHD_NUM=" + request.form["search"] + "ORDER BY " + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
         cursor = conn.cursor()    
         rows = cursor.execute(sql_statement).fetchall()
         cursor.close()
@@ -168,9 +160,33 @@ def upload_file():
 
 @app.route('/retailq1')
 def retailQ1():
-    return 'RetailQ1 works'
+    finstring = """
+    <p>
+        We can confidently state that customer engagement has been increasing over the last few years. Over the 3 year span from 2018 to 2020, customer spending increases by 0.1585 on average each year. By grouping the data by household number (HSHD_NUM) and by year (YEAR) and then aggregating the data by average spend (SPEND), we can observe the trend below.
+    </p>
+    <img src="../q1img1.png" alt="graph for q1">
+    <p>
+        Over the 3 years of data we have, we can observe a flux in various categories of people changing but not in correlation with the customer engagement increase. People who are married or with kids changed their spending habits, but in both groups, their spending was consistent with the known increase in average spend. Therein, we cannot confidently assess that marital status or number of children/presence of children has any effect on the customer engagement.
+    </p>
+    <img src="../q1img2.png" alt="graph for q1">
+    """
+    return finstring
 
 
 @app.route('/retailq2')
 def retailQ2():
-    return 'RetailQ2 works'
+    finstring = """
+     <p>
+        The demographic factor that appears to make the biggest impact on customer engagement is income range. Looking at the data displayed, it's easy to tell the relationship between income range and average spend per year is positive. Though the axis labels on the graph are not ordered properly, the income vs. average spend per year reveals that as the income range increases so does the average spend. Per year as well, each income range’s average spend increases with each year. Therein, we can confidently determine that income has a positive impact on customer engagement.
+    </p>
+    <img src="/q2img1.png" alt="graph for q1">
+    <p>
+        Another demographic that appears to have an influence on customer engagement is age. Although only one age group stands out, its impact is clear to see in the plot displays. Below, you can observe the average spend per age range per year and the count of all the age groups over the 3 years. Age range 19-24 is the smallest age range, but their average spend is the highest amongst all the age groups. However, when looking at the other age groups, they appear to have similar spending averages and fluctuating engagement.
+    </p>
+    <img src="/q2img2.png" alt="graph for q1">
+
+    <p>
+        In order to drive up customer engagement, we can target the age 19-24 demographic and encourage more young people to shop at Kroger. With their spending average being as high as it is, we’d get more engagement if more young people shopped with us. 
+    </p>
+    """
+    return finstring
