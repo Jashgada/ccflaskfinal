@@ -81,18 +81,6 @@ def display():
     # rows = cursor.execute(sql_statement).fetchall()
     # cursor.close()
     # return '<br><br>'.join(str(row) for row in rows)
-@app.route('/displayData/', methods = ["POST", "GET"])
-def displayData():
-    if request.method == "POST":
-        sorter =  request.form["sortBy"]
-        sql_statement = """SELECT TOP (1000) * FROM [household] WHERE HSHD_NUM='0010' ORDER BY """ + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
-        cursor = conn.cursor()    
-        rows = cursor.execute(sql_statement).fetchall()
-        cursor.close()
-        return '<br><br>'.join(str(row) for row in rows)
-    if request.method == "GET":
-        return "directly trying to access data"
-    return "Fail"
 
 @app.route('/displayData/', methods = ["POST", "GET"])
 def displayData():
