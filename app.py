@@ -6,8 +6,8 @@ import pyodbc
 # import pandas as pd
 # from flask_restful import reqparse, Api
 
-# conn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
-conn = pyodbc.connect("Driver={ODBC Driver 13 for SQL Server};Server=tcp:cloudfinalprojectf21.database.windows.net,1433;Database=FinalProjectDB;Uid=liz;Pwd=lilmems!;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
+conn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};Server=tcp:cloudprojdb.database.windows.net,1433;Database=cloudprojdb;Uid=adminuser;Pwd=bingus12uwu.;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
+# conn = pyodbc.connect("Driver={ODBC Driver 13 for SQL Server};Server=tcp:cloudfinalprojectf21.database.windows.net,1433;Database=FinalProjectDB;Uid=liz;Pwd=lilmems!;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
 
 
 app = Flask(__name__)
@@ -70,11 +70,12 @@ def createDb():
         reader = csv.reader(f.readlines()[1:])  # exclude header line
         cursor.executemany("""INSERT INTO household VALUES (?,?,?,?,?,?,?,?,?)""",
                     (row for row in reader))
+    cursor.commit()
     cursor.close()
     return "success!"
 @app.route('/display')
 def display():
-    sql_statement = "SELECT TOP (900) * FROM [households]"
+    sql_statement = "SELECT TOP (900) * FROM [household]"
 
     cursor = conn.cursor()    
     rows = cursor.execute(sql_statement).fetchall()
