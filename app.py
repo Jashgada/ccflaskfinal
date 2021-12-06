@@ -74,7 +74,7 @@ def createDb():
     return "success!"
 @app.route('/display')
 def display():
-    sql_statement = "SELECT TOP (900) * FROM [household]"
+    sql_statement = "SELECT TOP (900) * FROM [households]"
 
     cursor = conn.cursor()    
     rows = cursor.execute(sql_statement).fetchall()
