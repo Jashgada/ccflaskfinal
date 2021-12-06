@@ -54,7 +54,7 @@ def test():
 
 @app.route('/display')
 def display():
-    sql_statement = """SELECT TOP (1000) * FROM [household] WHERE HSHD_NUM='0010' """ #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+    sql_statement = """SELECT h.HSHD_NUM, h.L,h.AGE_RANGE,h.MARITAL,h.INCOME_RANGE,h.HOMEOWNER,h.HSHD_COMPOSITION, h.HH_SIZE,h.CHILDREN,t.BASKET_NUM,t.SPEND,t.UNITS,t.STORE_R,t.WEEK_NUM,t.[YEAR],t.PRODUCT_NUM,p.DEPARTMENT,p.COMMODITY FROM household AS h JOIN transactions AS t ON h.HSHD_NUM = t.HSHD_NUM JOIN products AS p ON t.PRODUCT_NUM = p.PRODUCT_NUM WHERE h.HSHD_NUM = '0010'""" 
     cursor = conn.cursor()    
     rows = cursor.execute(sql_statement).fetchall()
     cursor.close()
@@ -64,7 +64,7 @@ def display():
     <br>
      <form action="/displayData" method = "POST">
     <p>Sort By <input type = "text" name = "sortBy" /></p>
-    <p>Yyou can sort by Hshd_num, Basket_num, Date, Product_num, Department, Commodity</p>
+    <p>You can sort by Hshd_num, Basket_num, Date, Product_num, Department, Commodity</p>
     <p>Search By Household number <input type = "text" name = "search" /></p>
     <p><input type = "submit" value = "Submit" /></p>
 </form>
@@ -76,13 +76,17 @@ def displayData():
     if request.method == "POST":
         sorter =  request.form["sortBy"]
         if request.form["search"] == "":
-            sql_statement = """SELECT * FROM [household] ORDER BY """ + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+            sql_statement = """SELECT h.HSHD_NUM, h.L,h.AGE_RANGE,h.MARITAL,h.INCOME_RANGE,h.HOMEOWNER,h.HSHD_COMPOSITION, h.HH_SIZE,h.CHILDREN,t.BASKET_NUM,t.SPEND,t.UNITS,t.STORE_R,t.WEEK_NUM,t.[YEAR],t.PRODUCT_NUM,p.DEPARTMENT,p.COMMODITY FROM household AS h JOIN transactions AS t ON h.HSHD_NUM = t.HSHD_NUM JOIN products AS p ON t.PRODUCT_NUM = p.PRODUCT_NUM ORDER BY """ + sorter
+            
         else:
-            sql_statement = "SELECT * FROM [household] WHERE HSHD_NUM=" + request.form["search"] + "ORDER BY " + sorter #ORDER BY " + sorter + "WHERE HSHD_NUM='0010'"
+            
+            sql_statement = "SELECT h.HSHD_NUM, h.L,h.AGE_RANGE,h.MARITAL,h.INCOME_RANGE,h.HOMEOWNER,h.HSHD_COMPOSITION, h.HH_SIZE,h.CHILDREN,t.BASKET_NUM,t.SPEND,t.UNITS,t.STORE_R,t.WEEK_NUM,t.[YEAR],t.PRODUCT_NUM,p.DEPARTMENT,p.COMMODITY FROM household AS h JOIN transactions AS t ON h.HSHD_NUM = t.HSHD_NUM JOIN products AS p ON t.PRODUCT_NUM = p.PRODUCT_NUM WHERE h.HSHD_NUM = " + request.form["search"] + " ORDER BY " + sorter
         cursor = conn.cursor()    
         rows = cursor.execute(sql_statement).fetchall()
         cursor.close()
-        return '<br><br>'.join(str(row) for row in rows)
+        finstr = "(HSHD_NUM, L, AGE_RANGE, MARITAL, INCOME_RANGE, HOMEOWNER, HSHD_COMPOSITION, HH_SIZE, CHILDREN, BASKET_NUM, SPEND, UNITS, STORE_R, WEEK_NUM, YEAR, PRODUCT_NUM, DEPARTMENT, COMMODITY)<br>"
+        finstr += '<br><br>'.join(str(row) for row in rows)
+        return finstr
     if request.method == "GET":
         return "directly trying to access data"
     return "Fail"
@@ -130,6 +134,7 @@ def loadData():
          <p> Household file: <input type = "file" name = "householdFile" /></p>
          <p> Products file: <input type = "file" name = "productsFile" /></p>
          <p> Transactions file: <input type = "file" name = "transactionsFile" /></p>
+         <p>Please beware that large amounts of data may take significant time to load. For effiecient use, try 1000-2000 data points for each table</p>
          <input type = "submit"/>
       </form>""" 
 
